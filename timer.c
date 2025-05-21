@@ -5,13 +5,13 @@
 
 void config_timer0()
 {
-    // Habilita interrup��es de perifericos
+    // Habilita interrupções de perifericos
     INTCONbits.PEIE     = 1;
-    // Habilita interrup��o do timer 0
+    // Habilita interrupção do timer 0
     INTCONbits.TMR0IE   = 1;
     // Seta o flag do timer em zero
     INTCONbits.TMR0IF   = 0;
-    // Transi��o do timer por referencia interna
+    // Transição do timer por referencia interna
     T0CONbits.T0CS      = 0;
     // Ativa preescaler para o timer zero
     T0CONbits.PSA       = 0;
