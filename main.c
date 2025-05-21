@@ -6,10 +6,11 @@ int main()
 {
     os_init();
     
-    // Cria tarefas de usuário
-    create_task(1, 3, tarefa_1);
-    create_task(2, 3, tarefa_2);
-    create_task(3, 3, tarefa_3);
+    // Cria tarefas de usuario
+    create_task(1, 3, tarefa_acelerador);
+    create_task(2, 3, tarefa_controle_central);
+    create_task(3, 3, tarefa_controle_estabilidade);
+    create_task(3, 3, tarefa_injecao_eletronica);
     
     os_start();
     

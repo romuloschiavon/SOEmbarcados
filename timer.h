@@ -4,7 +4,7 @@
 void config_timer0(void);
 void start_timer0(void);
 
-// Tratador de interrupção do timer
+// Tratador de interrupcao do timer
 void __interrupt() ISR_TMR0(void);
 
 #endif	/* TIMER_H */

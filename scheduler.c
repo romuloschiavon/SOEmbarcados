@@ -2,7 +2,7 @@
 #include "config.h"
 #include "types.h"
 
-// Referência para a fila de aptos
+// Referï¿½ncia para a fila de aptos
 extern ready_queue_t r_queue;
 
 
@@ -32,6 +32,5 @@ void __reentrant rr_scheduler()
 
 void __reentrant priority_scheduler()
 {
-    // Ordenar a fila de aptos por prioridade
-    // 
+    //!TODO: Implementar o escalonador por prioridade
 }

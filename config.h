@@ -13,18 +13,7 @@
 
 #define DYNAMIC_MEM         OFF
 
-#define PIPE_SIZE           3
-
-// Aplica��o exemplo
-
-// APP_1 exemplo somente das tarefas
-#define APP_1               ON
-
-// APP_2 exemplo das tarefas com sem�foro
-#define APP_2               OFF
-
-// APP_3 exemplo das tarefas com comunica��o via pipe
-#define APP_3               OFF
+#define PIPE_SIZE           4
 
 #endif	/* CONFIG_H */
 
