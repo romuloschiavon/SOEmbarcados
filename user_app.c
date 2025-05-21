@@ -6,24 +6,31 @@
 
 #if APP_1 == ON
 
-TASK tarefa_1()
+TASK tarefa_acelerador()
 {
     while (1) {
-        LATDbits.LD0 = ~PORTDbits.RD0;
+        
     }    
 }
 
-TASK tarefa_2()
+TASK tarefa_controle_central()
 {
     while (1) {
-        LATDbits.LD1 = ~PORTDbits.RD1;
+        
     }    
 }
 
-TASK tarefa_3()
+TASK tarefa_injecao_eletronica()
 {
     while (1) {
-        LATDbits.LD2 = ~PORTDbits.RD2;
+        
+   }
+}
+
+TASK tarefa_controle_estabilidade()
+{
+    while (1) {
+        
    }
 }
 
@@ -33,9 +40,9 @@ void user_config()
     TRISDbits.RD1 = 0;
     TRISDbits.RD2 = 0;
     
-    // Define as tarefas como funções globais para
+    // Define as tarefas como funï¿½ï¿½es globais para
     // evitar que o compilador as retire na fase
-    // de geração de otimização.
+    // de geraï¿½ï¿½o de otimizaï¿½ï¿½o.
     asm("global _tarefa_1, _tarefa_2, _tarefa_3");
 }
 
@@ -79,12 +86,12 @@ void user_config()
     TRISDbits.RD1 = 0;
     TRISDbits.RD2 = 0;
    
-    // Inicializar o semáforo
+    // Inicializar o semï¿½foro
     sem_init(&s, 0);
     
-    // Define as tarefas como funções globais para
+    // Define as tarefas como funï¿½ï¿½es globais para
     // evitar que o compilador as retire na fase
-    // de geração de otimização.
+    // de geraï¿½ï¿½o de otimizaï¿½ï¿½o.
     asm("global _tarefa_1, _tarefa_2, _tarefa_3");
 }
 
@@ -134,9 +141,9 @@ void user_config()
    
     create_pipe(&pipe);
     
-    // Define as tarefas como funções globais para
+    // Define as tarefas como funï¿½ï¿½es globais para
     // evitar que o compilador as retire na fase
-    // de geração de otimização.
+    // de geraï¿½ï¿½o de otimizaï¿½ï¿½o.
     asm("global _tarefa_1, _tarefa_2, _tarefa_3");
 }
 
