@@ -1,3 +1,69 @@
+# Arquivos gerados pelo MPLAB X IDE
 build/
 dist/
+nbproject/private/
+nbproject/Package-*.bash
+nbproject/Makefile-*.mk
+nbproject/Makefile-impl.mk
+nbproject/Makefile-variables.mk
+*.atsln.err
+*.atsln.sdf
+*.atsln.suo
+*.tmp
+*.log
+*.tagsrc
+*.tagscope
+*.tags
+tags
+TAGS
+
+# Arquivos de log e temporários do MPLAB X
 queuelogs/
+mplab_ide.log
+mplab_ide.log.*
+*.hxl
+*.backup
+
+# Arquivos de saída do compilador e linker (PIC)
+*.o
+*.obj
+*.hex
+*.elf
+*.cof
+*.map
+*.lst
+*.rlf
+*.sdb
+*.mcs
+*.elf.debug
+*.d
+*.p1
+*.err
+*.warn
+*.as
+*.pre
+
+# Arquivos de depuração
+debug/
+*.DS_Store
+*.stackdump
+
+# Configurações de IDE e editores
+.vscode/
+.idea/
+*.swp
+*~
+*.bak
+*.orig
+
+# Arquivos gerados pelo sistema operacional
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Arquivos de executáveis (se aplicável fora do microcontrolador)
+*.exe
+*.out
+*.app
+
+.vscode/
