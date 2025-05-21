@@ -2,6 +2,7 @@
 #include "timer.h"
 #include "kernel.h"
 #include "scheduler.h"
+#include "config.h"
 
 void config_timer0()
 {

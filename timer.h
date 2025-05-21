@@ -8,4 +8,3 @@ void start_timer0(void);
 void __interrupt() ISR_TMR0(void);
 
 #endif	/* TIMER_H */
-

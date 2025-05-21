@@ -15,5 +15,7 @@
 
 #define PIPE_SIZE           4
 
+#define _XTAL_FREQ 8000000  // cristal interno
+
 #endif	/* CONFIG_H */
 

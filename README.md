@@ -34,7 +34,7 @@ O sistema simulará as seguintes funcionalidades de um veículo:
 
 ### 2. Configuração de Hardware e API de E/S (`io.c`, `io.h`)
 
-*   [ ] **Configurar Pinos de Hardware:**
+*   [x] **Configurar Pinos de Hardware:**
     *   [ ] Em `user_config()` (`user_app.c`), definir as direções dos pinos (TRISx):
         *   Pino para o potenciômetro (Acelerador) como entrada analógica (e.g., RA0/AN0).
         *   Pinos para controle PWM dos motores DC (Bicos Injetores) como saída (e.g., RC2/CCP1, RC1/CCP2). *Verificar pinos exatos do PIC18F24550 para PWM*.
