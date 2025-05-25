@@ -6,8 +6,8 @@
 #include "config.h"
 
 typedef struct pipe {
-    uint8_t pipe_msg[PIPE_SIZE];
-    //uint8_t *pipe_msg;
+    //uint8_t pipe_msg[PIPE_SIZE];
+    uint8_t *pipe_msg;
     uint8_t pipe_pos_read;
     uint8_t pipe_pos_write;
     sem_t pipe_sem_read;
@@ -19,7 +19,4 @@ void create_pipe(pipe_t *p);
 void write_pipe(pipe_t *p, uint8_t data);
 void read_pipe(pipe_t *p, uint8_t *data);
 
-
-
 #endif	/* PIPE_H */
-

@@ -3,6 +3,7 @@
 #include "user_app.h"
 #include "timer.h"
 #include "config.h"
+#include "mem.h"
 
 // Declara fila de aptos
 ready_queue_t r_queue;
@@ -55,6 +56,9 @@ void os_init()
     r_queue.ready_queue_size    = 0;
     r_queue.task_running        = 0;
     
+    // ConfiguraÃ§Ã£o de hardware
+    user_config();
+    
     // Cria a tarefa idle
     create_task(0, 0, idle);
     asm("global _idle");
@@ -72,10 +76,11 @@ void os_start()
     #if DEFAULT_SCHEDULER == PRIORITY_SCHEDULER
     // Ordenada a fila de aptos
     #endif
-    user_config();
-    
-    // Habilita as interrupções    
+
+    // Habilita as interrupï¿½ï¿½es    
     ei();
+
+    user_config();   
     
     // Liga o timer
     start_timer0();

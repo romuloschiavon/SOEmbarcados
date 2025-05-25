@@ -36,33 +36,20 @@ void __reentrant priority_scheduler()
 {
     uint8_t next_task_idx = 0; // Por padrão, aponta para a tarefa Idle
     uint8_t highest_priority = 0;
-    uint8_t found_user_task = 0;
-
-    // Procura pela tarefa de maior prioridade pronta (excluindo a Idle inicialmente)
+    uint8_t found_user_task = 0;    // Procura pela tarefa de maior prioridade pronta (excluindo a Idle inicialmente)
     // Iterar de 1 porque a tarefa 0 é a Idle
     for (uint8_t i = 1; i < r_queue.ready_queue_size; i++)
     {
         if (r_queue.ready_queue[i].task_state == READY)
         {
-            if (r_queue.ready_queue[i].task_priority >= highest_priority)
+            // Se é a primeira tarefa encontrada ou tem prioridade maior
+            if (!found_user_task || r_queue.ready_queue[i].task_priority > highest_priority)
             {
-                // Se a prioridade for maior, ou se for igual e for uma nova tarefa de usuário
-                // (para desempatar, a primeira encontrada com a maior prioridade é escolhida)
-                if (r_queue.ready_queue[i].task_priority > highest_priority || !found_user_task)
-                {
-                    highest_priority = r_queue.ready_queue[i].task_priority;
-                    next_task_idx = i;
-                    found_user_task = 1;
-                }
-                else if (found_user_task && r_queue.ready_queue[i].task_priority == highest_priority)
-                {
-                    // Critério de desempate: menor índice (primeira adicionada/encontrada)
-                    // Se a tarefa 'i' tem a mesma prioridade da 'next_task_idx' atual,
-                    // e 'i' tem um índice menor, então 'i' foi adicionada antes ou está antes na varredura.
-                    // No entanto, a lógica atual já pega a primeira encontrada com a maior prioridade.
-                    // Para ser mais explícito, poderíamos comparar os índices, mas a varredura linear já faz isso.
-                }
+                highest_priority = r_queue.ready_queue[i].task_priority;
+                next_task_idx = i;
+                found_user_task = 1;
             }
+            // Se tem mesma prioridade, mantém a primeira encontrada (menor índice)
         }
     }
 

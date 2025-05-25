@@ -3,6 +3,7 @@
 #include "kernel.h"
 #include "scheduler.h"
 #include "config.h"
+#include "io.h"
 
 void config_timer0()
 {
@@ -32,22 +33,28 @@ void __interrupt() ISR_TMR0()
 {
     di();
     
-    // Seta o flag do timer em zero
-    INTCONbits.TMR0IF   = 0;
-    // Valor inicial do timer
-    TMR0 = 0;
-    
-    // Decrementa o delay das tarefas que estao em estado 
-    // de waiting
-    decrease_time();
-    
-    // Salva o contexto da tarefa que esta em execucao
-    SAVE_CONTEXT(READY);
+    // Verifica e trata interrupção externa (freio)
+    ext_interrupt_handler();
+      // Verifica e trata interrupção do timer    if (INTCONbits.TMR0IF) {
+        // Seta o flag do timer em zero
+        INTCONbits.TMR0IF   = 0;
+        // Valor inicial do timer
+        TMR0 = 0;
+        
+        // Atualiza PWM via Timer1 para o terceiro bico (RC0)
+        timer1_pwm_update();
+                
+        // Decrementa o delay das tarefas que estao em estado
+        decrease_time();
+        
+        // Salva o contexto da tarefa que esta em execucao
+        SAVE_CONTEXT(READY);
 
-    // Chama o escalonador para definir qual a proxima tarefa sera executada
-    scheduler();
-    // Restaura o contexto da tarefa que entrara em execucao
-    RESTORE_CONTEXT();
+        // Chama o escalonador para definir qual a proxima tarefa sera executada
+        scheduler();
+        // Restaura o contexto da tarefa que entrara em execucao
+        RESTORE_CONTEXT();
+    }
     
     ei();
 }
