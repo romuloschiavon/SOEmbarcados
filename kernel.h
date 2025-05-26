@@ -9,6 +9,7 @@ extern ready_queue_t r_queue;
 // Chamadas de sistema
 
 void create_task(uint8_t id, uint8_t priority, f_ptr task);
+void remove_task(f_ptr task);
 void delay(uint16_t time);
 void yield(void);
 void os_init(void);

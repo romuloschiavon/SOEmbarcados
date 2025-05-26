@@ -9,6 +9,7 @@ TASK tarefa_injecao_eletronica(void);
 TASK tarefa_controle_estabilidade(void);
 
 void user_config(void);
+void freio_interrupt_callback(void);
 
 #endif	/* USER_APP_H */
 

@@ -59,24 +59,28 @@ void pwm_init(pwm_module_t module, unsigned int frequency)
 
 void pwm_set_duty_cycle(pwm_module_t module, unsigned int duty_cycle_value)
 {
-    if (duty_cycle_value > 1023) duty_cycle_value = 1023; // Satura em 10 bits
-    
-    if (module == PWM_MODULE_CCP1) 
+    if (duty_cycle_value > 1023){
+        duty_cycle_value = 1023; // Satura em 10 bits
+    }
+
+    if (module == PWM_MODULE_CCP1 || module == PWM_MODULE_CCP2) 
     {
         CCPR1L = (unsigned char)(duty_cycle_value >> 2);      // 8 MSBs
-        CCP1CON = (CCP1CON & 0xCF) | (unsigned char)((duty_cycle_value & 0x03) << 4); // 2 LSBs nos bits 5 e 4
-    }
-    else if (module == PWM_MODULE_CCP2) {
-        CCPR2L = (unsigned char)(duty_cycle_value >> 2);      // 8 MSBs
-        CCP2CON = (CCP2CON & 0xCF) | (unsigned char)((duty_cycle_value & 0x03) << 4); // 2 LSBs nos bits 5 e 4
+        CCP1CON = (uint8_t)(duty_cycle_value & 0b11); // 2 LSBs nos bits 5 e 4
     }
     else if (module == PWM_MODULE_TIMER1) {
         // Atualiza duty cycle para PWM via Timer1
         timer1_pwm_duty = duty_cycle_value;
+        timer1_pwm_update();
     }
 }
 
-void pwm_stop(pwm_module_t module)
+void pwm_start(void)
+{
+    T2CONbits.TMR2ON = 1;
+}
+
+void pwm_stop(void)
 {
     // Para parar o PWM, desliga o Timer2
     T2CONbits.TMR2ON = 0;
@@ -97,25 +101,14 @@ void timer1_pwm_update(void) {
 }
 
 // --- Implementação da API ADC (placeholders) ---
-void adc_init(unsigned char channel) {
-    // Configuração baseada no exemplo do professor
+void adc_init(void) {
     
-    // 1. Configurar canal ANx (ADCON0)
-    ADCON0bits.CHS = channel; // Ex: 0b0000 para AN0
-    
-    // 2. Configurar tensões de referência e pinos analógicos/digitais (ADCON1)
-    ADCON1bits.VCFG1 = 0; // VREF- = VSS
-    ADCON1bits.VCFG0 = 0; // VREF+ = VDD
-    // PCFG<3:0>: Para AN0 como analógico e os demais digitais = 0b1110
-    ADCON1bits.PCFG = 0b1110; 
-    
-    // 3. Configurar tempo de aquisição, clock do ADC e justificação (ADCON2)
-    ADCON2bits.ACQT = 0b101; // 12 TAD (Tempo de Aquisição)
-    ADCON2bits.ADCS = 0b101; // Fosc/16 (Clock de Conversão do ADC)
-    ADCON2bits.ADFM = 1;     // Resultado justificado à direita (ADRESH contém os 2 MSb, ADRESL os 8 LSb)
-      // 4. Ativar o módulo ADC (ADCON0)
-    ADCON0bits.ADON = 1;
-    
+    // 1. Configurar o ADC
+    TRISAbits.TRISA0 = 1;    // Configura RA0 como entrada
+    ADCON0 = 0b00000001;     // Canal AN0, ADC ligado
+    ADCON1 = 0b00001110;     // Justificado à direita, Vref+ = Vdd, Vref- = Vss
+    ADCON2 = 0b10101010;     // Tempo de aquisição e clock de conversão
+        
     // Pequeno delay para estabilização (usando loop simples)
     for(int i = 0; i < 1000; i++) {
         Nop();
@@ -123,12 +116,11 @@ void adc_init(unsigned char channel) {
 }
 
 unsigned int adc_read(void) {
-    ADCON0bits.GO_DONE = 1; 
-    while (ADCON0bits.GO_DONE); 
+    ADCON0bits.GO = 1; 
+    while (ADCON0bits.GO); 
     return (((unsigned int)ADRESH << 8) | ADRESL);
 }
 
-// --- Implementação da API de Interrupção Externa ---
 static interrupt_callback_t ext_int_callback = NULL;
 
 void ext_interrupt_init(unsigned char int_num, unsigned char edge_type, interrupt_callback_t callback_function) {
@@ -139,8 +131,8 @@ void ext_interrupt_init(unsigned char int_num, unsigned char edge_type, interrup
         INTCON2bits.INTEDG0 = edge_type;
         
         // Limpar flag e habilitar interrupção
-        INTCONbits.INT0IF = 0;
         INTCONbits.INT0IE = 1;
+        INTCONbits.INT0IF = 0;
         
         // Habilitar interrupções globais (se não estiverem habilitadas)
         INTCONbits.GIE = 1;
@@ -151,9 +143,9 @@ void ext_interrupt_init(unsigned char int_num, unsigned char edge_type, interrup
 // ISR para interrupção externa (deve ser chamada da ISR principal)
 void ext_interrupt_handler(void) {
     if (INTCONbits.INT0IF) {
-        INTCONbits.INT0IF = 0; // Limpa flag
+        INTCONbits.INT0IF = 0;
         if (ext_int_callback != NULL) {
-            ext_int_callback(); // Chama callback
+            ext_int_callback();
         }
     }
 }

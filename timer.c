@@ -35,7 +35,8 @@ void __interrupt() ISR_TMR0()
     
     // Verifica e trata interrupção externa (freio)
     ext_interrupt_handler();
-      // Verifica e trata interrupção do timer    if (INTCONbits.TMR0IF) {
+      // Verifica e trata interrupção do timer    
+    if (INTCONbits.TMR0IF) {
         // Seta o flag do timer em zero
         INTCONbits.TMR0IF   = 0;
         // Valor inicial do timer

@@ -28,6 +28,34 @@ void create_task(uint8_t id, uint8_t priority, f_ptr task)
     r_queue.ready_queue_size += 1;
 }
 
+void remove_task(f_ptr task)
+{
+    if(task == NULL || task == idle) 
+    {
+        return;
+    }
+    
+    di();
+    
+    for(uint8_t i = 0; i < r_queue.ready_queue_size; i++) 
+    {
+        if(r_queue.ready_queue[i].task_f == task) 
+        {
+            // Move todas as tarefas posteriores uma posição para frente
+            for(uint8_t j = i; j < r_queue.ready_queue_size - 1; j++) 
+            {
+                r_queue.ready_queue[j] = r_queue.ready_queue[j+1];
+            }
+            r_queue.ready_queue_size--;
+            break;
+        }
+    }
+    
+    RESTORE_CONTEXT();
+    
+    ei();    
+}
+
 void delay(uint16_t time)
 {
     di();
@@ -123,3 +151,5 @@ void decrease_time(void)
         }
     }
 }
+
+

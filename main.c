@@ -11,9 +11,6 @@ int main()
     create_task(2, 2, tarefa_controle_central);
     create_task(3, 3, tarefa_injecao_eletronica);
 
-    // REMOVIDO: create_task(4, 4, tarefa_controle_estabilidade); 
-    // A tarefa de controle de estabilidade será ativada apenas via interrupção de freio
-    
     os_start();
     
     while (1);

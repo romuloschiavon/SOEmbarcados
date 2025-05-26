@@ -17,16 +17,16 @@ void pwm_init(pwm_module_t module, unsigned int frequency);
 void pwm_set_duty_cycle(pwm_module_t module, unsigned int duty_cycle_value);
 
 // Inicia a geração do sinal PWM.
-void pwm_start(pwm_module_t module);
+void pwm_start(void);
 
 // Para a geração do sinal PWM.
-void pwm_stop(pwm_module_t module);
+void pwm_stop(void);
 
 // Atualiza PWM via Timer1 (terceiro bico)
 void timer1_pwm_update(void);
 
 // --- API para ADC (a ser implementada) ---
-void adc_init(unsigned char channel);
+void adc_init(void);
 unsigned int adc_read(void);
 
 // --- API para Interrupção Externa ---
