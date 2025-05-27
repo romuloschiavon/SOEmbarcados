@@ -1,5 +1,5 @@
 #ifndef CONFIG_H
-#define	CONFIG_H
+#define CONFIG_H
 
 #define ON                  1
 #define OFF                 0
@@ -15,17 +15,17 @@
 
 #define PIPE_SIZE           3
 
-#define _XTAL_FREQ 48000000UL
+#define _XTAL_FREQ          4000000UL
 
-#define LED_ACELERADOR  LATDbits.LATD0
-#define LED_CONTROLE_CENTRAL  LATDbits.LATD1
-#define LED_INJECAO_ELETRONICA  LATDbits.LATD2
-#define LED_CONTROLE_ESTABILIDADE  LATDbits.LATD3
+// LEDs de status
+#define LED_ACELERADOR              LATDbits.LATD0
+#define LED_CONTROLE_CENTRAL        LATDbits.LATD1
+#define LED_INJECAO_ELETRONICA      LATDbits.LATD2
+#define LED_CONTROLE_ESTABILIDADE   LATDbits.LATD3
 
-// Definições para os bicos injetores PWM - SOLUÇÃO ROBUSTA!
-#define BICO_INJETOR_1  PWM_MODULE_CCP1    // RC2/CCP1 - PWM Hardware
-#define BICO_INJETOR_2  PWM_MODULE_CCP2    // RC1/CCP2 - PWM Hardware  
-#define BICO_INJETOR_3  PWM_MODULE_TIMER1  // RC0 - PWM via Timer1 (híbrido)
+// Bicos injetores controlados por PWM nas saídas ECCP1
+#define BICO_INJETOR_1  0  // RD5 - P1B
+#define BICO_INJETOR_2  1  // RD6 - P1C
+#define BICO_INJETOR_3  2  // RD7 - P1D
 
-#endif	/* CONFIG_H */
-
+#endif /* CONFIG_H */
