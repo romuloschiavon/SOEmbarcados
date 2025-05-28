@@ -3,31 +3,30 @@
 
 #include "types.h"
 
-// Tarefas
+// Declaração das tarefas do sistema
 TASK tarefa_acelerador(void);
 TASK tarefa_controle_central(void);
 TASK tarefa_injecao_eletronica(void);
 TASK tarefa_controle_estabilidade(void);
 
-// Freio
+// Rotina de interrupção do freio
 void ISR_FREIO(void);
 
-// Config do user
+// Configuração inicial do usuário
 void user_config(void);
 
-// ===== RECURSOS DE COMUNICAÃÃO E SINCRONIZAÃÃO =====
-pipe_t pipe_acelerador_central;   // ComunicaÃ§Ã£o unidirecional
-mutex_t mutex_injecao;            // ProteÃ§Ã£o de recursos compartilhados
-sem_t sem_freio;                  // SinalizaÃ§Ã£o de eventos
-sem_t sem_injecao;                // SinalizaÃ§Ã£o de novos dados de injeÃ§Ã£o
+// Recursos de comunicação e sincronização entre tarefas
+pipe_t pipe_acelerador_central;   // Comunicação entre acelerador e controle central
+mutex_t mutex_injecao;            // Proteção da variável de tempo de injeção
+sem_t sem_freio;                  // Sinalização do freio de emergência
+sem_t sem_injecao;                // Sinalização de novos dados de injeção
 
-// VariÃ¡vel protegida pelo mutex
+// Variável compartilhada protegida pelo mutex
 unsigned int g_tempo_injecao = 0;
 
-// variaveis de controle
-volatile uint8_t estabilidade = 0;
-volatile uint8_t freio = 0;
-
+// Variáveis de controle do sistema
+volatile uint8_t estabilidade = 0; // Flag do sistema de estabilidade ativo
+volatile uint8_t freio = 0;        // Flag do freio de emergência ativo
 
 #endif	/* USER_APP_H */
 

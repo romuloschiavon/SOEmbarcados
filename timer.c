@@ -8,17 +8,17 @@
 
 void config_timer0()
 {
-    // Habilita interrupÃ§Ãµes de perifericos
+    // Habilita interrupções de periféricos
     INTCONbits.PEIE     = 1;
-    // Habilita interrupÃ§Ã£o do timer 0
+    // Habilita interrupção do timer 0
     INTCONbits.TMR0IE   = 1;
-    // Seta o flag do timer em zero
+    // Limpa flag de interrupção
     INTCONbits.TMR0IF   = 0;
-    // TransiÃ§Ã£o do timer por referencia interna
+    // Timer usa clock interno
     T0CONbits.T0CS      = 0;
-    // Ativa preescaler para o timer zero
+    // Ativa prescaler para o timer
     T0CONbits.PSA       = 0;
-    // Preesclaer 1:64
+    // Prescaler 1:64 para gerar tick de aproximadamente 1ms
     T0CONbits.T0PS      = 0b101;
     // Valor inicial do timer
     TMR0 = 0;
@@ -29,27 +29,29 @@ void start_timer0()
     T0CONbits.TMR0ON = 1;
 }
 
-// Tratador Ãºnico de interrupÃ§Ãµes
+// Tratador único de interrupções do sistema
 void __interrupt() ISR_TMR0()
 {   
+    // Checa interrupções externas (freio)
     ISR_FREIO();
       
-    // Verifica e trata interrupÃ§Ã£o do timer    
+    // Verifica e trata interrupção do timer    
     if (INTCONbits.TMR0IF) {
-        // Seta o flag do timer em zero        
+        // Limpa flag de interrupção        
         INTCONbits.TMR0IF = 0;
-        // Valor inicial do timer
+        // Reinicia contador
         TMR0 = 0;
         
-        // Decrementa o delay das tarefas que estao em estado
+        // Decrementa contador de delay das tarefas
         decrease_time();
         
-        // Salva o contexto da tarefa que esta em execucao
+        // Salva contexto da tarefa atual
         SAVE_CONTEXT(READY);
 
-        // Chama o escalonador para definir qual a proxima tarefa sera executada
+        // Chama escalonador para próxima tarefa
         scheduler();
-        // Restaura o contexto da tarefa que entrara em execucao
+        
+        // Restaura contexto da nova tarefa
         RESTORE_CONTEXT();
     }
 }
