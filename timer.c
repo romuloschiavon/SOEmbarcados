@@ -28,23 +28,22 @@ void start_timer0()
     T0CONbits.TMR0ON = 1;
 }
 
-// Tratador de interrupcao do timer
+// Tratador único de interrupções - FUNÇÃO PRINCIPAL DE INTERRUPÇÃO
 void __interrupt() ISR_TMR0()
-{
-    di();
-    
-    // Verifica e trata interrupção externa (freio)
-    ext_interrupt_handler();
-      // Verifica e trata interrupção do timer    
+{   
+    // Verifica interrupção externa (freio)
+    if (INTCONbits.INT0IF && INTCONbits.INT0IE) {
+        // Chama o tratador de interrupções externas
+        ISR_PRINCIPAL();
+    }
+      
+    // Verifica e trata interrupção do timer    
     if (INTCONbits.TMR0IF) {
-        // Seta o flag do timer em zero
-        INTCONbits.TMR0IF   = 0;
+        // Seta o flag do timer em zero        
+        INTCONbits.TMR0IF = 0;
         // Valor inicial do timer
         TMR0 = 0;
         
-        // Atualiza PWM via Timer1 para o terceiro bico (RC0)
-        timer1_pwm_update();
-                
         // Decrementa o delay das tarefas que estao em estado
         decrease_time();
         
@@ -56,6 +55,4 @@ void __interrupt() ISR_TMR0()
         // Restaura o contexto da tarefa que entrara em execucao
         RESTORE_CONTEXT();
     }
-    
-    ei();
 }

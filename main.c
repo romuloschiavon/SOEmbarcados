@@ -1,15 +1,15 @@
 #include "kernel.h"
 #include "user_app.h"
 
-
 int main()
 {
     os_init();
     
-    // Cria tarefas de usuario com prioridades para teste e aplicação:
-    create_task(1, 1, tarefa_acelerador); 
-    create_task(2, 2, tarefa_controle_central);
-    create_task(3, 3, tarefa_injecao_eletronica);
+    // ✅ TODAS as tarefas com prioridades corretas
+    create_task(1, 2, tarefa_acelerador);           // Prioridade 2
+    create_task(2, 3, tarefa_controle_central);     // Prioridade 3  
+    create_task(3, 4, tarefa_injecao_eletronica);   // Prioridade 4
+    create_task(4, 1, tarefa_controle_estabilidade); // Prioridade 1 (MAIOR)
 
     os_start();
     
