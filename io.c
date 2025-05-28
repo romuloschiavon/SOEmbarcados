@@ -1,45 +1,41 @@
 #include "io.h"
 #include <xc.h>
 
-// --- PWM CONFIGURAÇÃO ---
+// --- PWM CONFIGURAÃÃO ---
 void pwm_init(void)
 {
-    // Configura os pinos como saída digital
-    TRISCbits.TRISC2 = 0; // P1A - RC2
-    TRISDbits.TRISD5 = 0; // P1B - RD5
-    TRISDbits.TRISD6 = 0; // P1C - RD6
-
-    // ✅ ENHANCED PWM MODE CORRETO com todas as saídas
-    CCP1CON = 0b11001100; // P1M=11 (Enhanced PWM), CCP1M=1100 (PWM mode)
+    // ConfiguraÃ§Ã£o do pino RC2 como saÃ­da para PWM
+    TRISCbits.TRISC2 = 0; // CCP1 - RC2 (saÃ­da PWM)
     
-    // Timer2 configuração
-    T2CON = 0b00000100;   // ✅ Timer2 ON, Prescaler 1:1 (mais responsivo)
-    PR2 = 255;            // Período PWM máximo
+    // Configura CCP1 para modo PWM padrÃ£o (nÃ£o Enhanced)
+    CCP1CON = 0b00001100; // Modo PWM padrÃ£o
     
-    // Duty cycle inicial zero
+    // Timer2 configuraÃ§Ã£o para frequÃªncia PWM
+    T2CON = 0x04;         // Prescaler 1:1, Timer2 ON
+    PR2 = 0xFF;           // PerÃ­odo = 255 â ~1kHz @ 4MHz
+    
+    // Duty cycle inicial = 0% (motor parado)
     CCPR1L = 0;
     CCP1CONbits.DC1B = 0;
     
-    // Inicia Timer2
-    TMR2 = 0;
-    T2CONbits.TMR2ON = 1;
+    TMR2 = 0;            // Reset Timer2
 }
 
 void pwm_set_duty(uint8_t duty)
 {
     if (duty > 255) duty = 255;
-
-    // ✅ CONFIGURAÇÃO CORRETA para 10-bit PWM
+    
+    // ConfiguraÃ§Ã£o do duty cycle (8-bit)
     CCPR1L = duty;                    // 8 bits MSB
-    CCP1CONbits.DC1B = 0;             // 2 bits LSB = 0 (resolução 8-bit)
+    CCP1CONbits.DC1B = 0;             // 2 bits LSB = 0
 }
 
-// --- ADC CONFIGURAÇÃO ---
+// --- ADC CONFIGURAÃÃO ---
 void adc_init(void)
 {
     ADCON0 = 0b00000001;     // AN0, ADC on
-    ADCON1 = 0b00001110;     // AN0 analógico, restante digital
-    ADCON2 = 0b10101010;     // Justificado à direita, Tac=Fosc/32
+    ADCON1 = 0b00001110;     // AN0 analÃ³gico, restante digital
+    ADCON2 = 0b10101010;     // Justificado Ã  direita, Tac=Fosc/32
     
     // Configura RA0 como entrada para ADC
     TRISAbits.TRISA0 = 1;
@@ -52,42 +48,16 @@ uint16_t adc_read(void)
     return (uint16_t)((ADRESH << 8) | ADRESL);
 }
 
-static void (*ext_int_callback)(void) = 0;
-
-void ext_interrupt_init(uint8_t int_num, uint8_t edge_type, void (*callback)(void))
+void ext_interrupt_init(uint8_t int_num, uint8_t edge_type)
 {
-    if (int_num == 0) {
-        // Configura RB0 como entrada
-        TRISBbits.TRISB0 = 1;
-        
-        // Habilita pull-up interno (IMPORTANTE!)
-        INTCON2bits.NOT_RBPU = 0;  // Habilita pull-ups do PORTB
-        
-        INTCONbits.INT0IE = 1;       // Habilita INT0
-        INTCONbits.INT0IF = 0;       // Limpa flag
-        INTCON2bits.INTEDG0 = edge_type ? 1 : 0; // 1 = borda de subida, 0 = descida
-        ext_int_callback = callback;
-        
-        // Habilita interrupções globais
+    if (int_num == 0){
+        TRISBbits.TRISB0 = 1;       // Configura RB0 como entrada
+        INTCON2bits.INTEDG0 = edge_type; // Borda de interrupÃ§Ã£o
+        INTCONbits.INT0IE = 1;      // Habilita interrupÃ§Ã£o INT0
+        INTCONbits.INT0IF = 0;      // Limpa flag de interrupÃ§Ã£o
+    }
+    else{
+        INTCONbits.PEIE = 1;
         INTCONbits.GIE = 1;
-    }
-}
-
-void ext_interrupt_handler(void)
-{
-    if (INTCONbits.INT0IF) {
-        INTCONbits.INT0IF = 0;       // Limpa flag PRIMEIRO
-        if (ext_int_callback) {
-            ext_int_callback();       // Chama callback
-        }
-    }
-}
-
-// Removido __interrupt() - agora é uma função normal
-void ISR_PRINCIPAL(void)
-{
-    // Verifica interrupção externa INT0
-    if (INTCONbits.INT0IF && INTCONbits.INT0IE) {
-        ext_interrupt_handler();
     }
 }

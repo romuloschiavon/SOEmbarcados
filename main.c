@@ -5,11 +5,11 @@ int main()
 {
     os_init();
     
-    // ✅ TODAS as tarefas com prioridades corretas
-    create_task(1, 2, tarefa_acelerador);           // Prioridade 2
-    create_task(2, 3, tarefa_controle_central);     // Prioridade 3  
-    create_task(3, 4, tarefa_injecao_eletronica);   // Prioridade 4
-    create_task(4, 1, tarefa_controle_estabilidade); // Prioridade 1 (MAIOR)
+    // Criação das tarefas em ordem de prioridade
+    create_task(1, 1, tarefa_acelerador);           // Prioridade 1 (baixa)
+    create_task(2, 2, tarefa_controle_central);     // Prioridade 2 (média)
+    create_task(3, 3, tarefa_injecao_eletronica);   // Prioridade 3 (alta)
+    // A tarefa de estabilidade é criada dinamicamente com prioridade 4 (máxima)
 
     os_start();
     

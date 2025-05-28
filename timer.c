@@ -4,16 +4,17 @@
 #include "scheduler.h"
 #include "config.h"
 #include "io.h"
+#include "user_app.h"
 
 void config_timer0()
 {
-    // Habilita interrupções de perifericos
+    // Habilita interrupÃ§Ãµes de perifericos
     INTCONbits.PEIE     = 1;
-    // Habilita interrupção do timer 0
+    // Habilita interrupÃ§Ã£o do timer 0
     INTCONbits.TMR0IE   = 1;
     // Seta o flag do timer em zero
     INTCONbits.TMR0IF   = 0;
-    // Transição do timer por referencia interna
+    // TransiÃ§Ã£o do timer por referencia interna
     T0CONbits.T0CS      = 0;
     // Ativa preescaler para o timer zero
     T0CONbits.PSA       = 0;
@@ -28,16 +29,12 @@ void start_timer0()
     T0CONbits.TMR0ON = 1;
 }
 
-// Tratador único de interrupções - FUNÇÃO PRINCIPAL DE INTERRUPÇÃO
+// Tratador Ãºnico de interrupÃ§Ãµes
 void __interrupt() ISR_TMR0()
 {   
-    // Verifica interrupção externa (freio)
-    if (INTCONbits.INT0IF && INTCONbits.INT0IE) {
-        // Chama o tratador de interrupções externas
-        ISR_PRINCIPAL();
-    }
+    ISR_FREIO();
       
-    // Verifica e trata interrupção do timer    
+    // Verifica e trata interrupÃ§Ã£o do timer    
     if (INTCONbits.TMR0IF) {
         // Seta o flag do timer em zero        
         INTCONbits.TMR0IF = 0;

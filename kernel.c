@@ -41,7 +41,7 @@ void remove_task(f_ptr task)
     {
         if(r_queue.ready_queue[i].task_f == task) 
         {
-            // Move todas as tarefas posteriores uma posição para frente
+            // Move todas as tarefas posteriores uma posiÃ§Ã£o para frente
             for(uint8_t j = i; j < r_queue.ready_queue_size - 1; j++) 
             {
                 r_queue.ready_queue[j] = r_queue.ready_queue[j+1];
@@ -84,7 +84,7 @@ void os_init()
     r_queue.ready_queue_size    = 0;
     r_queue.task_running        = 0;
     
-    // Configuração de hardware
+    // ConfiguraÃ§Ã£o de hardware
     user_config();
     
     // Cria a tarefa idle
@@ -105,7 +105,7 @@ void os_start()
     // Ordenada a fila de aptos
     #endif
 
-    // Habilita as interrup��es    
+    // Habilita as interrupï¿½ï¿½es    
     ei();
 
     user_config();   

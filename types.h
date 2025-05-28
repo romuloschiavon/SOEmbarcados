@@ -10,6 +10,7 @@
 #define RR_SCHEDULER            1
 #define PRIORITY_SCHEDULER      2
 
+#include "pipe.h"
 
 // Tipos de dados
 
